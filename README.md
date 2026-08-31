@@ -100,6 +100,6 @@ Two licences, because this repository holds two kinds of work:
 See `CITATION.cff`, or:
 
 ```
-Ermolenko, E. (2026). Design Grammar ontology (Version 1.0.0) [Computer software].
+Ermolenko, E. (2026). Design Grammar ontology (Version 1.0.1) [Computer software].
 GitHub. https://github.com/Erarchitech/design-grammar-ontology
 ```

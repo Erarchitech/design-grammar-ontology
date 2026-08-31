@@ -10,9 +10,11 @@ The contents of `ontology/` and `spec/` in this repository are licensed under th
 You are free to share and adapt this material for any purpose, including commercially, provided you
 give appropriate credit, link to the licence, and indicate if changes were made.
 
+Copyright 2026 Evgenii Ermolenko, University of Minho.
+
 ## Attribution
 
-Ermolenko, E. (2026). *Design Grammar ontology* (Version 1.0.0) [Computer software]. GitHub.
+Ermolenko, E. (2026). *Design Grammar ontology* (Version 1.0.1) [Computer software]. GitHub.
 https://github.com/Erarchitech/design-grammar-ontology
 
 The remainder of this repository — including `services/`, `llm/` and `migrations/` — is licensed
