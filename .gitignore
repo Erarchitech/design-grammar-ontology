@@ -1,0 +1,16 @@
+# Build output
+bin/
+obj/
+__pycache__/
+*.pyc
+node_modules/
+
+# IDE
+.vs/
+.idea/
+*.user
+*.suo
+
+# Local
+.env
+.env.*

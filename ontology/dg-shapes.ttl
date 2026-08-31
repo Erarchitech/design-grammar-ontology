@@ -1,0 +1,541 @@
+# Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0)
+# https://creativecommons.org/licenses/by/4.0/  —  see ontology/LICENSE.md
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dgv: <http://example.org/design-grammar/valid#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix ex: <http://example.org/design-grammar/ex#> .
+@prefix dgc: <http://example.org/design-grammar/comp#> .
+@prefix dgsh: <http://example.org/design-grammar/shapes#> .
+
+# ontology/dg-shapes.ttl
+#
+# Version-controlled SHACL data-integrity shapes (D-07/D-08, Phase 823 Plan 02).
+#
+# Replaces the Phase 821 empty-placeholder shapes graph in
+# dg-reasoner/reasoning.py::run_shacl(). Loaded from the existing read-only
+# ./ontology volume mount (821 D-07 overlay pattern) -- editing this file and
+# restarting the dg-reasoner container is enough, no image rebuild.
+#
+# SCOPE (D-08, spec/RULE-PARTITION-POLICY.md): these shapes validate
+# structural DATA INTEGRITY of the v4 instance data (ValidGraph ABox +
+# Metagraph individuals) -- never a quantitative geometry/parameter
+# architect-authored design rule. Those live exclusively in the SWRL
+# VALIDATOR pipeline. Disagreement between the two systems means
+# mis-categorization, never a shape re-encoding a business rule.
+#
+# STRUCTURE: each top-level `sh:NodeShape` declares only `sh:targetClass` and
+# one or more `sh:property` links to a NAMED (not blank-node) property shape.
+# This is deliberate, not stylistic: SHACL's `sh:severity`/`sh:message` are
+# read from the SHAPE THAT ACTUALLY PRODUCES the validation result -- for a
+# `sh:property` constraint that is the nested property shape, never the
+# enclosing NodeShape (verified empirically against the installed pySHACL
+# 0.40.0: a `sh:severity`/`sh:message` placed only on the NodeShape is
+# silently ignored, every result defaults to `sh:Violation` with pySHACL's
+# generic constraint message). Naming the property shapes (instead of using
+# blank nodes) also keeps `sh:sourceShape` a stable `URIRef` that survives
+# the NTriples round-trip pySHACL's subprocess isolation depends on, so
+# dg-reasoner/reasoning.py's `dgsh:howToFix` enrichment lookup resolves
+# correctly. Every property shape below carries its own sh:severity +
+# sh:message (plain architect language, no sh:* vocabulary) + dgsh:howToFix
+# (remediation guidance, this file's own annotation predicate).
+
+#############################################
+# 1. DesignState-kind membership (structural)
+#############################################
+dgsh:DsKindLabelShape
+    a sh:NodeShape ;
+    sh:targetClass dgv:ObjState, dgv:ParamState, dgv:PropState ;
+    sh:property dgsh:DsKindLabelShape_label .
+
+dgsh:DsKindLabelShape_label
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:severity sh:Violation ;
+    sh:message "A DesignState child (object, parameter, or property state) is missing an identifying label." ;
+    dgsh:howToFix "Ensure the state's label, objectRef, or stateId is populated before the run is published." .
+
+#############################################
+# 2. PropState completeness
+#############################################
+dgsh:PropStateCompletenessShape
+    a sh:NodeShape ;
+    sh:targetClass dgv:PropState ;
+    sh:property dgsh:PropStateCompletenessShape_rule, dgsh:PropStateCompletenessShape_dataProperty, dgsh:PropStateCompletenessShape_value .
+
+dgsh:PropStateCompletenessShape_rule
+    sh:path dgv:ruleIri ;
+    sh:minCount 1 ;
+    sh:severity sh:Violation ;
+    sh:message "A property state has no Rule binding." ;
+    dgsh:howToFix "Confirm the VALIDATOR run bound a Rule to this property state before sending." .
+
+dgsh:PropStateCompletenessShape_dataProperty
+    sh:path dgv:dataPropertyIri ;
+    sh:minCount 1 ;
+    sh:severity sh:Violation ;
+    sh:message "A property state has no DataProperty binding." ;
+    dgsh:howToFix "Confirm the VALIDATOR run bound a DataProperty to this property state before sending." .
+
+dgsh:PropStateCompletenessShape_value
+    sh:path dgv:propValue ;
+    sh:minCount 1 ;
+    sh:severity sh:Violation ;
+    sh:message "A property state has no captured PropValue." ;
+    dgsh:howToFix "Confirm the PROPERTY STATE component captured a value before the run was sent." .
+
+#############################################
+# 3. Run status
+#############################################
+dgsh:RunStatusShape
+    a sh:NodeShape ;
+    sh:targetClass dgv:Run ;
+    sh:property dgsh:RunStatusShape_send, dgsh:RunStatusShape_valid .
+
+dgsh:RunStatusShape_send
+    sh:path dgv:sendStatus ;
+    sh:minCount 1 ;
+    sh:datatype xsd:boolean ;
+    sh:severity sh:Violation ;
+    sh:message "A validation Run is missing its SendStatus." ;
+    dgsh:howToFix "Re-publish the run so SendStatus is recorded as a boolean on the Run node." .
+
+dgsh:RunStatusShape_valid
+    sh:path dgv:validStatus ;
+    sh:minCount 1 ;
+    sh:severity sh:Violation ;
+    sh:message "A validation Run is missing its ValidStatus list." ;
+    dgsh:howToFix "Re-publish the run so ValidStatus is recorded on the Run node." .
+
+#############################################
+# 4. ObjState objectRef non-empty
+#############################################
+dgsh:ObjStateObjectRefShape
+    a sh:NodeShape ;
+    sh:targetClass dgv:ObjState ;
+    sh:property dgsh:ObjStateObjectRefShape_label .
+
+dgsh:ObjStateObjectRefShape_label
+    sh:path rdfs:label ;
+    sh:minLength 1 ;
+    sh:severity sh:Violation ;
+    sh:message "An object state has an empty object reference." ;
+    dgsh:howToFix "Reconnect the OBJECT STATE component's ObjectRef input so it captures a non-empty identifier." .
+
+#############################################
+# 5. Var name non-empty (advisory)
+#############################################
+dgsh:VarNameShape
+    a sh:NodeShape ;
+    sh:targetClass swrl:Variable ;
+    sh:property dgsh:VarNameShape_label .
+
+dgsh:VarNameShape_label
+    sh:path rdfs:label ;
+    sh:minLength 1 ;
+    sh:severity sh:Warning ;
+    sh:message "A SWRL variable used by a rule has no human-readable name." ;
+    dgsh:howToFix "Author the rule so every variable keeps a descriptive name (e.g. ?height) instead of an anonymous placeholder." .
+
+#############################################
+# 6. Rule structural integrity -- Rule_Id present
+#############################################
+dgsh:RuleIdShape
+    a sh:NodeShape ;
+    sh:targetClass swrl:Imp ;
+    sh:property dgsh:RuleIdShape_label .
+
+dgsh:RuleIdShape_label
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:severity sh:Violation ;
+    sh:message "A rule is missing its Rule_Id-bearing label." ;
+    dgsh:howToFix "Re-ingest the rule so it carries a Rule_Id (e.g. R_URB_HEIGHT_MAX_75_V) before validation." .
+
+#############################################
+# 7. Rule structural integrity -- SHOULD reference a SWRL body (advisory)
+#############################################
+dgsh:RuleBodyReferenceShape
+    a sh:NodeShape ;
+    sh:targetClass swrl:Imp ;
+    sh:property dgsh:RuleBodyReferenceShape_body .
+
+dgsh:RuleBodyReferenceShape_body
+    sh:path swrl:body ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "A rule has no SWRL body atoms -- it can never fire." ;
+    dgsh:howToFix "Check the rule's RULE DECONSTRUCT output; a rule with zero body atoms should be re-ingested or removed." .
+
+#############################################
+# 8. Advisory: a ParamState with zero captured parameters is tolerable but suspicious
+#############################################
+dgsh:ParamStateParameterCountShape
+    a sh:NodeShape ;
+    sh:targetClass dgv:ParamState ;
+    sh:property dgsh:ParamStateParameterCountShape_count .
+
+dgsh:ParamStateParameterCountShape_count
+    sh:path dgv:parameterCount ;
+    sh:minInclusive 1 ;
+    sh:severity sh:Info ;
+    sh:message "A parameter state was captured with zero parameters." ;
+    dgsh:howToFix "This is tolerable (e.g. a design with no sliders/toggles) but worth double-checking the PARAMETER STATE wiring." .
+
+#############################################
+# 9. Representation — platform-native binding integrity (Phase 32.1)
+#############################################
+dgsh:RepresentationShape
+    a sh:NodeShape ;
+    sh:targetClass dgc:Representation ;
+    sh:property dgsh:RepresentationShape_platform,
+                dgsh:RepresentationShape_nativeIdKind,
+                dgsh:RepresentationShape_nativeId,
+                dgsh:RepresentationShape_project,
+                dgsh:RepresentationShape_connector .
+
+dgsh:RepresentationShape_platform
+    sh:path dgc:platform ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:in ("Grasshopper" "Revit" "IFC" "Speckle") ;
+    sh:severity sh:Violation ;
+    sh:message "A Representation node has a missing or invalid platform value — must be one of Grasshopper, Revit, IFC, or Speckle." ;
+    dgsh:howToFix "Set the platform property to a valid value: Grasshopper, Revit, IFC, or Speckle." .
+
+dgsh:RepresentationShape_nativeIdKind
+    sh:path dgc:nativeIdKind ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:in ("InstanceGuid" "UniqueId" "GlobalId" "ApplicationId") ;
+    sh:severity sh:Violation ;
+    sh:message "A Representation node has a missing or invalid nativeIdKind — must be one of InstanceGuid, UniqueId, GlobalId, or ApplicationId." ;
+    dgsh:howToFix "Set nativeIdKind to InstanceGuid (Grasshopper), UniqueId (Revit), GlobalId (IFC), or ApplicationId (Speckle)." .
+
+dgsh:RepresentationShape_nativeId
+    sh:path dgc:nativeId ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Representation node is missing its nativeId — every binding must carry a platform-native identifier." ;
+    dgsh:howToFix "Ensure the bind operation supplies the native platform identifier (instance GUID, UniqueId, GlobalId, or ApplicationId)." .
+
+dgsh:RepresentationShape_project
+    sh:path dgc:project ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Representation node is missing the project property — every node must carry project isolation." ;
+    dgsh:howToFix "Set project on the Representation node to the owning project." .
+
+dgsh:RepresentationShape_connector
+    sh:path dgc:connector ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Representation node is missing its connector provenance." ;
+    dgsh:howToFix "Set the connector property to the string identifying the binding source (e.g. gh-plugin, revit-sim)." .
+
+#############################################
+# 10. SharedProperty — cross-platform property integrity (Phase 32.1)
+#############################################
+dgsh:SharedPropertyShape
+    a sh:NodeShape ;
+    sh:targetClass dgc:SharedProperty ;
+    sh:property dgsh:SharedPropertyShape_dgId,
+                dgsh:SharedPropertyShape_propertyName,
+                dgsh:SharedPropertyShape_project,
+                dgsh:SharedPropertyShape_platform,
+                dgsh:SharedPropertyShape_writtenAt .
+
+dgsh:SharedPropertyShape_dgId
+    sh:path dgc:dgId ;
+    sh:minCount 1 ;
+    sh:pattern "^dg:[0-9A-F]{16}$" ;
+    sh:severity sh:Violation ;
+    sh:message "A SharedProperty node has a missing or malformed dgId — must match the pattern dg: followed by 16 uppercase hex characters." ;
+    dgsh:howToFix "Mint the entity via /identity/mint before writing shared properties, or pass a valid dg:XXXX... (16 hex) value." .
+
+dgsh:SharedPropertyShape_propertyName
+    sh:path dgc:propertyName ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A SharedProperty node is missing its propertyName — every shared property must name the value it carries." ;
+    dgsh:howToFix "Supply a propertyName string (e.g. 'insulation', 'uValue', 'area') when writing the shared property." .
+
+dgsh:SharedPropertyShape_project
+    sh:path dgc:project ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A SharedProperty node is missing the project property — every node must carry project isolation." ;
+    dgsh:howToFix "Set project on the SharedProperty node to the owning project." .
+
+dgsh:SharedPropertyShape_platform
+    sh:path dgc:platform ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A SharedProperty node is missing its platform provenance — the system needs to know which platform computed this value." ;
+    dgsh:howToFix "Set the platform property to the platform that computed the value (Grasshopper, Revit, IFC, or Speckle)." .
+
+dgsh:SharedPropertyShape_writtenAt
+    sh:path dgc:writtenAt ;
+    sh:minCount 1 ;
+    sh:severity sh:Violation ;
+    sh:message "A SharedProperty node is missing its writtenAt timestamp — provenance requires a recorded write time." ;
+    dgsh:howToFix "Set writtenAt to the datetime when the value was computed and written." .
+
+#############################################
+# 11. Object — Computgraph runtime entity (Phase 36)
+#############################################
+dgsh:ObjectShape
+    a sh:NodeShape ;
+    sh:targetClass dgc:Object ;
+    sh:property dgsh:ObjectShape_objectName,
+                dgsh:ObjectShape_source,
+                dgsh:ObjectShape_definitionId,
+                dgsh:ObjectShape_publishedAt,
+                dgsh:ObjectShape_project .
+
+dgsh:ObjectShape_objectName
+    sh:path dgc:objectName ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "An Object node is missing its objectName — every design object must have a display name." ;
+    dgsh:howToFix "Ensure the tagged/recognized entity carries an objectName before publishing." .
+
+dgsh:ObjectShape_source
+    sh:path dgc:source ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:in ("tagged" "recognized") ;
+    sh:severity sh:Violation ;
+    sh:message "An Object node has a missing or invalid source — must be 'tagged' or 'recognized'." ;
+    dgsh:howToFix "Set source to 'tagged' for manually tagged entities or 'recognized' for AI-recognized ones." .
+
+dgsh:ObjectShape_definitionId
+    sh:path dgc:definitionId ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "An Object node is missing its definitionId — every Computgraph entity must carry a definition identifier." ;
+    dgsh:howToFix "Supply the definitionId from the Phase 30/35 serialization output." .
+
+dgsh:ObjectShape_publishedAt
+    sh:path dgc:publishedAt ;
+    sh:minCount 1 ;
+    sh:severity sh:Violation ;
+    sh:message "An Object node is missing its publishedAt timestamp — provenance requires a recorded publish time." ;
+    dgsh:howToFix "Set publishedAt to the datetime when the publish endpoint posts the Computgraph subgraph." .
+
+dgsh:ObjectShape_project
+    sh:path dgc:project ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "An Object node is missing the project property — every node must carry project isolation." ;
+    dgsh:howToFix "Set project on the Object node to the owning project." .
+
+#############################################
+# 12. Behavior — Computgraph structural node (Phase 36)
+#############################################
+dgsh:BehaviorShape
+    a sh:NodeShape ;
+    sh:targetClass dgc:Behavior ;
+    sh:property dgsh:BehaviorShape_definitionId,
+                dgsh:BehaviorShape_project .
+
+dgsh:BehaviorShape_definitionId
+    sh:path dgc:definitionId ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Behavior node is missing its definitionId — every Computgraph entity must carry a definition identifier." ;
+    dgsh:howToFix "Supply the definitionId from the serialization output." .
+
+dgsh:BehaviorShape_project
+    sh:path dgc:project ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Behavior node is missing the project property — every node must carry project isolation." ;
+    dgsh:howToFix "Set project on the Behavior node to the owning project." .
+
+#############################################
+# 13. Algorithm — Computgraph runtime entity (Phase 36)
+#############################################
+dgsh:AlgorithmShape
+    a sh:NodeShape ;
+    sh:targetClass dgc:Algorithm ;
+    sh:property dgsh:AlgorithmShape_algorithmName,
+                dgsh:AlgorithmShape_algIndex,
+                dgsh:AlgorithmShape_project .
+
+dgsh:AlgorithmShape_algorithmName
+    sh:path dgc:algorithmName ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "An Algorithm node is missing its algorithmName — every algorithm must have a display name." ;
+    dgsh:howToFix "Ensure the entity carries an algorithmName before publishing." .
+
+dgsh:AlgorithmShape_algIndex
+    sh:path dgc:algIndex ;
+    sh:minCount 1 ;
+    sh:datatype xsd:integer ;
+    sh:severity sh:Violation ;
+    sh:message "An Algorithm node is missing its algIndex — every algorithm must carry its position within the behavior." ;
+    dgsh:howToFix "Set algIndex to the integer position of this algorithm within its parent behavior." .
+
+dgsh:AlgorithmShape_project
+    sh:path dgc:project ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "An Algorithm node is missing the project property — every node must carry project isolation." ;
+    dgsh:howToFix "Set project on the Algorithm node to the owning project." .
+
+#############################################
+# 14. Procedure — Computgraph runtime entity (Phase 36)
+#############################################
+dgsh:ProcedureShape
+    a sh:NodeShape ;
+    sh:targetClass dgc:Procedure ;
+    sh:property dgsh:ProcedureShape_procedureName,
+                dgsh:ProcedureShape_procIndex,
+                dgsh:ProcedureShape_project .
+
+dgsh:ProcedureShape_procedureName
+    sh:path dgc:procedureName ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Procedure node is missing its procedureName — every procedure must have a display name." ;
+    dgsh:howToFix "Ensure the entity carries a procedureName before publishing." .
+
+dgsh:ProcedureShape_procIndex
+    sh:path dgc:procIndex ;
+    sh:minCount 1 ;
+    sh:datatype xsd:integer ;
+    sh:severity sh:Violation ;
+    sh:message "A Procedure node is missing its procIndex — every procedure must carry its position within the algorithm." ;
+    dgsh:howToFix "Set procIndex to the integer position of this procedure within its parent algorithm." .
+
+dgsh:ProcedureShape_project
+    sh:path dgc:project ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Procedure node is missing the project property — every node must carry project isolation." ;
+    dgsh:howToFix "Set project on the Procedure node to the owning project." .
+
+#############################################
+# 15. Pattern — Computgraph runtime entity (Phase 36)
+#############################################
+dgsh:PatternShape
+    a sh:NodeShape ;
+    sh:targetClass dgc:Pattern ;
+    sh:property dgsh:PatternShape_patternName,
+                dgsh:PatternShape_project .
+
+dgsh:PatternShape_patternName
+    sh:path dgc:patternName ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Pattern node is missing its patternName — every pattern must have a display name." ;
+    dgsh:howToFix "Ensure the entity carries a patternName before publishing." .
+
+dgsh:PatternShape_project
+    sh:path dgc:project ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Pattern node is missing the project property — every node must carry project isolation." ;
+    dgsh:howToFix "Set project on the Pattern node to the owning project." .
+
+#############################################
+# 16. Parameter — Computgraph runtime entity (Phase 36)
+#############################################
+dgsh:ParameterShape
+    a sh:NodeShape ;
+    sh:targetClass dgc:Parameter ;
+    sh:property dgsh:ParameterShape_parameterName,
+                dgsh:ParameterShape_paramKind,
+                dgsh:ParameterShape_dataType,
+                dgsh:ParameterShape_project .
+
+dgsh:ParameterShape_parameterName
+    sh:path dgc:parameterName ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Parameter node is missing its parameterName — every parameter must have a display name." ;
+    dgsh:howToFix "Ensure the entity carries a parameterName before publishing." .
+
+dgsh:ParameterShape_paramKind
+    sh:path dgc:paramKind ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:in ("Variable" "Constant" "Emergent") ;
+    sh:severity sh:Violation ;
+    sh:message "A Parameter node has a missing or invalid paramKind — must be Variable, Constant, or Emergent." ;
+    dgsh:howToFix "Set paramKind to Variable (user-adjustable), Constant (fixed), or Emergent (derived during computation)." .
+
+dgsh:ParameterShape_dataType
+    sh:path dgc:dataType ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:in ("Float" "Integer" "Text" "Boolean" "Geometry") ;
+    sh:severity sh:Violation ;
+    sh:message "A Parameter node has a missing or invalid dataType — must be Float, Integer, Text, Boolean, or Geometry." ;
+    dgsh:howToFix "Set dataType to one of the supported types: Float, Integer, Text, Boolean, or Geometry." .
+
+dgsh:ParameterShape_project
+    sh:path dgc:project ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "A Parameter node is missing the project property — every node must carry project isolation." ;
+    dgsh:howToFix "Set project on the Parameter node to the owning project." .
+
+#############################################
+# 17. Interface — Computgraph runtime entity (Phase 36)
+#############################################
+dgsh:InterfaceShape
+    a sh:NodeShape ;
+    sh:targetClass dgc:Interface ;
+    sh:property dgsh:InterfaceShape_interfaceName,
+                dgsh:InterfaceShape_ifaceType,
+                dgsh:InterfaceShape_project .
+
+dgsh:InterfaceShape_interfaceName
+    sh:path dgc:interfaceName ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "An Interface node is missing its interfaceName — every interface must have a display name." ;
+    dgsh:howToFix "Ensure the entity carries an interfaceName before publishing." .
+
+dgsh:InterfaceShape_ifaceType
+    sh:path dgc:ifaceType ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:in ("Input" "Output") ;
+    sh:severity sh:Violation ;
+    sh:message "An Interface node has a missing or invalid ifaceType — must be Input or Output." ;
+    dgsh:howToFix "Set ifaceType to Input (receiving data) or Output (producing data)." .
+
+dgsh:InterfaceShape_project
+    sh:path dgc:project ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:severity sh:Violation ;
+    sh:message "An Interface node is missing the project property — every node must carry project isolation." ;
+    dgsh:howToFix "Set project on the Interface node to the owning project." .

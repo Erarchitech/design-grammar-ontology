@@ -1,0 +1,146 @@
+#if GRASSHOPPER_SDK
+using System.Collections.Concurrent;
+using DG.Core.Parsing;
+
+namespace DG.Grasshopper.Canvas;
+
+/// <summary>
+/// Process-shared, in-memory store of pending LLM-suggested structure proposals (RCGN-03) --
+/// the state holder that lets the DG CANVAS LISTENER (writer, after a recognition run) and the
+/// on-canvas confirm/reject component (reader/mutator) see the same pending proposals without
+/// either component owning the other. Follows the <see cref="CanvasAnnotationStyles"/>
+/// internal-static-class idiom, extended with a <see cref="ConcurrentDictionary{TKey,TValue}"/>
+/// for mutable shared state -- both writers ultimately run on the GH UI thread (35-RESEARCH.md
+/// Pattern 3), but ConcurrentDictionary removes all doubt at zero cost (T-35-07 mitigation).
+/// </summary>
+internal static class PreviewRegistry
+{
+    private static readonly ConcurrentDictionary<string, PreviewEntry> _entries = new();
+
+    /// <summary>
+    /// Zips <paramref name="created"/> (proposalId -&gt; the GH_Group GUID just created for it)
+    /// with the matching <paramref name="proposals"/> by proposal id and inserts one
+    /// <see cref="PreviewEntry"/> per pair. A created id with no matching proposal (or vice
+    /// versa) is skipped rather than throwing.
+    /// </summary>
+    public static void RegisterAll(
+        IEnumerable<(string proposalId, Guid groupGuid)> created,
+        IEnumerable<ProposalDto> proposals)
+    {
+        ArgumentNullException.ThrowIfNull(created);
+        ArgumentNullException.ThrowIfNull(proposals);
+
+        var proposalsById = proposals.ToDictionary(p => p.ProposalId, StringComparer.Ordinal);
+
+        foreach (var (proposalId, groupGuid) in created)
+        {
+            if (!proposalsById.TryGetValue(proposalId, out var proposal))
+            {
+                continue;
+            }
+
+            var entry = new PreviewEntry(
+                proposal.ProposalId,
+                groupGuid,
+                proposal.ToEntityTagKind(),
+                proposal.SuggestedName,
+                proposal.ProcedureIndex,
+                proposal.Confidence,
+                proposal.Rationale,
+                proposal.Provider,
+                proposal.Model);
+
+            _entries[proposalId] = entry;
+        }
+    }
+
+    /// <summary>Snapshot of all pending entries -- never a live view (T-35-07: no torn reads).</summary>
+    public static IReadOnlyCollection<PreviewEntry> Pending => _entries.Values.ToList();
+
+    public static bool TryGet(string proposalId, out PreviewEntry entry) =>
+        _entries.TryGetValue(proposalId, out entry!);
+
+    public static void Remove(string proposalId) => _entries.TryRemove(proposalId, out _);
+
+    public static void Clear() => _entries.Clear();
+}
+
+/// <summary>
+/// A single pending preview: the created (not-yet-confirmed) group's GUID plus the proposal
+/// data needed to render/confirm/reject it. <see cref="ProcedureIndex"/> (Plan 35-04 addition)
+/// carries the proposal's enclosing NN token forward so <c>DG STRUCTURE CONFIRM</c>'s accept
+/// path can re-derive a convention-conformant permanent nickname via
+/// <see cref="CanvasAnnotationNameFactory.ForEntity"/>, which requires it for every
+/// <see cref="EntityTagKind"/> -- it would otherwise be lost once <see cref="ProposalDto"/> is
+/// projected into this record.
+///
+/// <para>
+/// <see cref="Provider"/>/<see cref="Model"/> (Phase 36 UAT F6) identify the LLM that authored
+/// the proposal. Together with <see cref="Confidence"/> they are the payload
+/// <c>DG STRUCTURE CONFIRM</c> stamps into the <see cref="DG.Core.Parsing.RecognitionMarker"/> at
+/// accept time -- without them the accepted group would publish with a null
+/// <c>provider</c>/<c>model</c>/<c>confidence</c>, which is exactly what F6 reported.
+/// </para>
+/// </summary>
+internal sealed record PreviewEntry(
+    string ProposalId,
+    Guid GroupGuid,
+    EntityTagKind Kind,
+    string SuggestedName,
+    int ProcedureIndex,
+    double Confidence,
+    string Rationale,
+    string? Provider = null,
+    string? Model = null);
+
+/// <summary>
+/// Wire-JSON carrier for one LLM structure proposal (cg_recognition.py's proposal shape) --
+/// deserialization target plus the raw-kind-string -&gt; <see cref="EntityTagKind"/> mapping
+/// helper so <see cref="PreviewRegistry"/> and its callers never re-implement the mapping.
+/// </summary>
+internal sealed record ProposalDto(
+    string ProposalId,
+    string Kind,
+    string SuggestedName,
+    int ProcedureIndex,
+    IReadOnlyList<string> MemberIds,
+    double Confidence,
+    string Rationale,
+    string? Provider = null,
+    string? Model = null)
+{
+    /// <summary>
+    /// Maps the raw wire <see cref="Kind"/> string to the typed <see cref="EntityTagKind"/>
+    /// enum, case-insensitively. Accepts both the EntityTagKind short names ("Proc", "Pat",
+    /// "Var", "Const", "Emg", "IntF") and the catalog entity-class kinds cg_recognition.py's
+    /// prompt actually teaches the LLM ("Procedure", "Pattern", "VariableParam",
+    /// "ConstantParam", "EmergentParam", "Interface"). Explicit switch instead of
+    /// <see cref="Enum.TryParse{TEnum}(string, bool, out TEnum)"/> (WR-02): TryParse also
+    /// accepts numeric strings ("7" parses to an UNDEFINED enum value), which bypassed the
+    /// caller's guard-and-continue and let <c>CanvasAnnotationStyles.ForKind</c> throw
+    /// mid-render. Throws for anything unrecognized rather than guessing (mirrors
+    /// CanvasAnnotationParser's "never guess").
+    /// </summary>
+    public EntityTagKind ToEntityTagKind() =>
+        (Kind ?? string.Empty).Trim().ToLowerInvariant() switch
+        {
+            "proc" or "procedure" => EntityTagKind.Proc,
+            "pat" or "pattern" => EntityTagKind.Pat,
+            "var" or "variableparam" => EntityTagKind.Var,
+            "const" or "constantparam" => EntityTagKind.Const,
+            "emg" or "emergentparam" => EntityTagKind.Emg,
+            "intf" or "interface" => EntityTagKind.IntF,
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(Kind),
+                Kind,
+                "Unknown proposal Kind -- expected an EntityTagKind name or a catalog entity-class kind."),
+        };
+}
+#else
+namespace DG.Grasshopper.Canvas;
+
+/// <summary>Stub for builds without the Grasshopper SDK (GRASSHOPPER_SDK undefined).</summary>
+internal static class PreviewRegistry
+{
+}
+#endif

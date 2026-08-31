@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+title: Design Grammar ontology
+message: >-
+  If you use this ontology or the accompanying software, please cite it using
+  the metadata below.
+type: software
+authors:
+  - given-names: Evgenii
+    family-names: Ermolenko
+    email: erarchitech@gmail.com
+    orcid: 'https://orcid.org/0009-0003-1228-9550'
+    affiliation: >-
+      University of Minho; EAAD; Lab2PT; ISISE, Guimaraes, Portugal
+repository-code: 'https://github.com/Erarchitech/design-grammar-ontology'
+abstract: >-
+  The Design Grammar ontology: a vendor-neutral core module over five coplanar
+  graph layers, with alignment extensions to the W3C/OGC standards stack, the
+  Building Topology Ontology and Topologic, a SHACL shape set, the normative
+  property-graph-to-OWL mapping, and the runtime services that exercise the
+  schema.
+keywords:
+  - ontology
+  - knowledge graph
+  - SWRL
+  - SHACL
+  - design intent
+  - openBIM
+  - compliance checking
+  - design grammars
+license: Apache-2.0
+license-url: 'https://github.com/Erarchitech/design-grammar-ontology/blob/main/README.md#licence'
+version: 1.0.0
+date-released: '2026-08-31'
