@@ -4,12 +4,12 @@ of CTXA-01's per-layer concept catalog).
 
 Mirrors reasoner.py's module-constant-registry layout: SWRL_CONVENTIONS is a
 plain module-level dict (data, not prose) built once at import time. The
-Computgraph catalog is parsed ONCE from the real `DesignGrammar-V7.owl` file
+Computgraph catalog is parsed ONCE from the real `DesignGrammar-V8.owl` file
 on first call and cached in `_COMPUTGRAPH_CACHE` -- matching how
 llm_gateway.py caches expensive discovery work, never re-parsed per request.
 
 Scope guard (29-CONTEXT.md D-14/D-15): this module CATALOGS what
-DesignGrammar-V7.owl already defines. It does NOT invent new Computgraph
+DesignGrammar-V8.owl already defines. It does NOT invent new Computgraph
 structure (Phase 32's CGSR job) and is NOT wired into rule_ingest/rule_edit/
 graph_query context selection (Phase 35's RCGN job) -- pure forward-prep.
 
@@ -17,17 +17,17 @@ Path resolution mirrors dg_context.py's CYPHER_CATALOG_FILE: inside the
 data-service Docker container the repo root is mounted read-only at
 `/mnt/repo` (see docker-compose.yml's `.:/mnt/repo:ro` volume +
 `DG_KNOWLEDGE_REPO_ROOT: /mnt/repo` env var), so `COMPUTGRAPH_OWL_FILE`
-resolves to `/mnt/repo/ontology/DesignGrammar-V7.owl` with zero Dockerfile
+resolves to `/mnt/repo/ontology/DesignGrammar-V8.owl` with zero Dockerfile
 changes. Outside the container the same env var is unset and the path
-falls back to `<repo-root>/ontology/DesignGrammar-V7.owl`, computed
+falls back to `<repo-root>/ontology/DesignGrammar-V8.owl`, computed
 relative to this file.
 
-OWL parsing reuses `ontology/export_to_markdown_v7.py`'s existing helper
+OWL parsing reuses `ontology/export_to_markdown_v8.py`'s existing helper
 functions (localname/get_text/get_resource/parse_domain_or_range/
 parse_one_of/get_about, plus its NS namespace-map constant) rather than
 reimplementing an OWL walker -- loaded dynamically via
 `importlib.util.spec_from_file_location`, the exact pattern already used by
-`ontology/make_docs_v7.py` to invoke that same module. Verified directly
+`ontology/make_docs_v8.py` to invoke that same module. Verified directly
 against the real file: Python's stdlib `xml.etree.ElementTree.parse()`
 resolves the file's DOCTYPE internal-entity block (`<!ENTITY dgc "...">`)
 natively -- no custom entity resolver or text pre-processing is needed.
@@ -103,11 +103,11 @@ def swrl_conventions() -> dict[str, Any]:
 
 _REPO_ROOT = Path(os.getenv("DG_KNOWLEDGE_REPO_ROOT", str(Path(__file__).resolve().parent.parent)))
 
-COMPUTGRAPH_OWL_FILE = _REPO_ROOT / "ontology" / "DesignGrammar-V7.owl"
-_OWL_EXPORTER_MODULE_PATH = _REPO_ROOT / "ontology" / "export_to_markdown_v7.py"
+COMPUTGRAPH_OWL_FILE = _REPO_ROOT / "ontology" / "DesignGrammar-V8.owl"
+_OWL_EXPORTER_MODULE_PATH = _REPO_ROOT / "ontology" / "export_to_markdown_v8.py"
 
 # The five dgc: entity classes tagged dg:graph="&dgc;Computgraph" in the OWL
-# file (DesignGrammar-V7.owl ~2307-2378), per CTXA-01/D-14.
+# file (DesignGrammar-V8.owl ~2307-2378), per CTXA-01/D-14.
 COMPUTGRAPH_ENTITY_CLASS_NAMES: tuple[str, ...] = (
     "Algorithm",
     "Procedure",
@@ -120,16 +120,16 @@ _COMPUTGRAPH_CACHE: dict[str, Any] | None = None
 
 
 def _load_owl_exporter():
-    """Dynamically load export_to_markdown_v7.py's module-level OWL helpers.
+    """Dynamically load export_to_markdown_v8.py's module-level OWL helpers.
 
-    Mirrors ontology/make_docs_v7.py's importlib.util.spec_from_file_location
+    Mirrors ontology/make_docs_v8.py's importlib.util.spec_from_file_location
     driver -- reuses the existing, already-proven NS map + localname/get_text/
     get_resource/parse_domain_or_range/parse_one_of/get_about functions
     instead of re-deriving a fresh OWL/XML walker (RESEARCH.md A1 / Don't
     Hand-Roll #3).
     """
     spec = importlib.util.spec_from_file_location(
-        "export_to_markdown_v7", _OWL_EXPORTER_MODULE_PATH
+        "export_to_markdown_v8", _OWL_EXPORTER_MODULE_PATH
     )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -148,7 +148,7 @@ def _describe_class(exporter, classes: dict[str, ET.Element], iri: str) -> dict[
 
 # DG Canvas Annotation Convention grammar -- the GH scribble/group naming
 # patterns inferable directly from the OWL file's own Frame worked-example
-# individual labels (DesignGrammar-V7.owl ~2719-2930: Object_Frame's
+# individual labels (DesignGrammar-V8.owl ~2719-2930: Object_Frame's
 # Algorithm/Procedure/Pattern/Parameter/Interface individuals). Catalogs what
 # the OWL file's example instances already demonstrate -- does not invent new
 # grammar (D-14). The full parser grammar/typo-tolerance/normalization
@@ -157,7 +157,7 @@ _ANNOTATION_CONVENTION: dict[str, Any] = {
     "description": (
         "GH canvas scribble/group naming grammar, derived from the "
         "dgc:Computgraph 'Frame' worked example individuals in "
-        "DesignGrammar-V7.owl (Algorithm_1, Proc_11/Proc_12, "
+        "DesignGrammar-V8.owl (Algorithm_1, Proc_11/Proc_12, "
         "Pat_11_DivideLine, Var_11_SpansCount, Const_11_ptZero, "
         "Emg_11_LineSDL, IntF_11_ParSplitAt, etc.)."
     ),
@@ -185,7 +185,7 @@ _ANNOTATION_CONVENTION: dict[str, Any] = {
 
 
 def load_computgraph_catalog() -> dict[str, Any]:
-    """Parse the Computgraph portion of DesignGrammar-V7.owl once, then cache.
+    """Parse the Computgraph portion of DesignGrammar-V8.owl once, then cache.
 
     Returns a dict with:
     - hub: the dgc:Computgraph hub class

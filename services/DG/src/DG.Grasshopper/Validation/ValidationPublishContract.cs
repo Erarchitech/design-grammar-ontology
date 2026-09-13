@@ -15,7 +15,7 @@ internal sealed class ValidationPublishRequest
 
     /// <summary>
     /// Per-ObjState Boolean list from the VALIDATOR component (Phase 18 GHVL-05).
-    /// Index-matched to DesignState.ObjStates order. Null for pre-v7.0 clients.
+    /// Index-matched to DesignState.ObjStates order. Null for pre-v8.0 clients.
     /// </summary>
     public List<bool>? ValidStatus { get; set; }
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-    OASIS XML Catalog for Protégé / OWL API — v7.0 bundle.
+    OASIS XML Catalog for Protégé / OWL API — v8.0 bundle.
 
-    Maps the owl:imports IRIs used by the DesignGrammar v7.0 ontology files to
-    their physical "-V7" locations, plus the seven external vocabulary imports.
-    Load DesignGrammar-standards-extension-V7.owl with this catalog active to get
-    DesignGrammar-V7.owl + the W3C/OGC standards resolved for HermiT reasoning.
+    Maps the owl:imports IRIs used by the DesignGrammar v8.0 ontology files to
+    their physical "-V8" locations, plus the seven external vocabulary imports.
+    Load DesignGrammar-standards-extension-V8.owl with this catalog active to get
+    DesignGrammar-V8.owl + the W3C/OGC standards resolved for HermiT reasoning.
 
     The five DG sub-namespaces (#core dg, /meta#, /valid#, /spec#, /comp#) all live
-    inside the single physical file DesignGrammar-V7.owl, so only the parent
+    inside the single physical file DesignGrammar-V8.owl, so only the parent
     ontology IRIs need catalog entries.
 
     The v6.0 catalog (catalog-v001-V6.xml) and the original v5 catalog
@@ -16,19 +16,19 @@
     sets. Use only ONE catalog at a time to avoid duplicate-IRI mappings.
 -->
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <group id="DG v7.0 ontology bundle" prefer="public" xml:base="">
+    <group id="DG v8.0 ontology bundle" prefer="public" xml:base="">
 
-        <!-- DG core ontology (v7.0) — Core band + 5 graph layers. Open this for lean Protégé view. -->
-        <uri id="DG-core" name="http://example.org/design-grammar" uri="DesignGrammar-V7.owl"/>
+        <!-- DG core ontology (v8.0) — Core band + 5 graph layers. Open this for lean Protégé view. -->
+        <uri id="DG-core" name="http://example.org/design-grammar" uri="DesignGrammar-V8.owl"/>
 
-        <!-- DG standards extension (v7.0, facade) — SWRL, PROV-O, SOSA, SHACL, SKOS, DCTerms, GeoSPARQL alignment axioms. Open this for cross-vocab reasoning. -->
-        <uri id="DG-standards" name="http://example.org/design-grammar/standards" uri="DesignGrammar-standards-extension-V7.owl"/>
+        <!-- DG standards extension (v8.0, facade) — SWRL, PROV-O, SOSA, SHACL, SKOS, DCTerms, GeoSPARQL alignment axioms. Open this for cross-vocab reasoning. -->
+        <uri id="DG-standards" name="http://example.org/design-grammar/standards" uri="DesignGrammar-standards-extension-V8.owl"/>
 
-        <!-- DG BOT extension (v7.0) — Building Topology Ontology alignment (anchored on dg:Topology, unchanged in v7.0). -->
-        <uri id="DG-BOT" name="http://example.org/design-grammar/bot-extension" uri="DesignGrammar-BOT-extension-V7.owl"/>
+        <!-- DG BOT extension (v8.0) — Building Topology Ontology alignment (anchored on dg:Topology, unchanged in v8.0). -->
+        <uri id="DG-BOT" name="http://example.org/design-grammar/bot-extension" uri="DesignGrammar-BOT-extension-V8.owl"/>
 
-        <!-- DG Topologic extension (v7.0) — Topologic spatial analysis library alignment (anchored on dg:Topology, unchanged in v7.0). -->
-        <uri id="DG-Topologic" name="http://example.org/design-grammar/topologic-extension" uri="DesignGrammar-Topologic-extension-V7.owl"/>
+        <!-- DG Topologic extension (v8.0) — Topologic spatial analysis library alignment (anchored on dg:Topology, unchanged in v8.0). -->
+        <uri id="DG-Topologic" name="http://example.org/design-grammar/topologic-extension" uri="DesignGrammar-Topologic-extension-V8.owl"/>
 
         <!-- BOT — W3C Linked Building Data Community Group. Building Topology Ontology. -->
         <uri id="BOT"

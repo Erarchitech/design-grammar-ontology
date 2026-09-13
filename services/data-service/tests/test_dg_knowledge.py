@@ -3,7 +3,7 @@
 
 Follows the existing test pattern from test_dg_context.py / test_reasoner.py:
 FastAPI TestClient boilerplate header, sys.path.insert. TestComputgraphCatalog
-parses the REAL DesignGrammar-V7.owl file (no synthetic fixture) so parser
+parses the REAL DesignGrammar-V8.owl file (no synthetic fixture) so parser
 tests catch real-file DOCTYPE/entity issues (RESEARCH.md Pitfall 4).
 """
 
@@ -115,9 +115,9 @@ class TestComputgraphCatalog:
         monkeypatch.setattr(dg_knowledge, "_COMPUTGRAPH_CACHE", None)
 
     def test_owl_file_resolves_and_exists(self):
-        """COMPUTGRAPH_OWL_FILE resolves to the real, existing V7 OWL file."""
+        """COMPUTGRAPH_OWL_FILE resolves to the real, existing V8 OWL file."""
         assert dg_knowledge.COMPUTGRAPH_OWL_FILE.exists()
-        assert dg_knowledge.COMPUTGRAPH_OWL_FILE.name == "DesignGrammar-V7.owl"
+        assert dg_knowledge.COMPUTGRAPH_OWL_FILE.name == "DesignGrammar-V8.owl"
 
     def test_parses_without_error(self):
         """Parsing the real file never raises (no ParseError / undefined entity)."""
@@ -177,7 +177,7 @@ class TestComputgraphCatalog:
     def test_includes_source_provenance(self):
         catalog = dg_knowledge.load_computgraph_catalog()
         assert catalog["source_iri"] == "http://example.org/design-grammar/comp#Computgraph"
-        assert catalog["source_file"].endswith("DesignGrammar-V7.owl")
+        assert catalog["source_file"].endswith("DesignGrammar-V8.owl")
 
     def test_second_call_does_not_reparse(self, monkeypatch):
         """A second load_computgraph_catalog() call hits the cache, no re-parse."""

@@ -38,7 +38,7 @@
     xml:base="http://example.org/design-grammar/standards">
 
     <!-- ============================================================
-         DESIGN GRAMMAR — ALIGNED FACADE (v7.0)
+         DESIGN GRAMMAR — ALIGNED FACADE (v8.0)
 
          This facade ontology imports the core DG ontology AND the seven
          external vocabularies DG aligns with, then declares the
@@ -60,7 +60,7 @@
         <cc:license rdf:resource="https://creativecommons.org/licenses/by/4.0/"/>
         <rdfs:label xml:lang="en">Design Grammar (aligned facade)</rdfs:label>
         <rdfs:comment xml:lang="en">Cross-vocabulary alignment facade for the Design Grammar System ontology. Imports the DG core ontology and seven established W3C/OGC vocabularies (SWRL, PROV-O, SOSA, SHACL, SKOS, DCTerms, GeoSPARQL) and declares the alignment axioms that bridge them. See ONTOLOGY-ALIGNMENT.md for rationale (R1-R7).</rdfs:comment>
-        <owl:versionInfo>7.0</owl:versionInfo>
+        <owl:versionInfo>8.0</owl:versionInfo>
         <owl:imports rdf:resource="http://example.org/design-grammar"/>
         <owl:imports rdf:resource="http://www.w3.org/2003/11/swrl"/>
         <owl:imports rdf:resource="http://www.w3.org/ns/prov-o#"/>

@@ -95,7 +95,7 @@ All data lives in a **single Neo4j 5 database**. Logical separation uses the `gr
 - `kind` = ObjState | ParamState | PropState
 - `statePayloadJson` = v2 JSON envelope with `objStates`/`paramStates`/`propStates` keys, each containing typed state arrays
 - StateId prefix: `OS_` for ObjState, `DS_` for ParamState, `PS_` for PropState
-- Persisted with `graph = 'ValidGraph'` (not Metagraph — corrected in v7.0)
+- Persisted with `graph = 'ValidGraph'` (not Metagraph — corrected in v8.0)
 - **Two writers** (amended Phase 38 — the prior single-writer-by-VALIDATOR claim no longer holds):
   - the VALIDATOR publish path (unchanged) — MERGE'd by `StateId` + `project` (dedup across runs); and
   - `POST /computgraph/candidates/accept` (Phase 38, GHIN-03/D-18/D-21), which writes a **standalone, Run-less** `ParamState` `DesignState` for an architect-accepted AI-generated candidate, carrying the provenance properties shown on the fourth example line above (`source`, `sourceRuleId`, `provider`, `model`, `confidence`, `definitionId`, `publishedAt`, `strategy`, `determinabilityClass`, `generatedAt`). MERGE keyed by `StateId` + `project` remains the rule for both writers, so re-accepting an AI candidate is equally idempotent.
@@ -381,7 +381,7 @@ All data lives in a **single Neo4j 5 database**. Logical separation uses the `gr
 
 The identity registry comprises the `Representation` and `SharedProperty` node labels, the `dgId` property on Computgraph entity nodes, and the `HAS_REPRESENTATION` / `HAS_SHARED_PROPERTY` relationships — all under `graph:'Computgraph'`. These nodes are written ONLY by the data-service identity API (`/identity/*` routes), never by LLM rule-ingest.
 
-**Recorded decision:** `dgId` gets **no OWL annotation property in V7**. It is runtime/persistence identity, not ontological vocabulary — the OWL file does not model identity bindings. Rationale: the ADR at `DG_OBSIDIAN/knowledge/decisions/DG ID cross-platform identity scheme.md`.
+**Recorded decision:** `dgId` gets **no OWL annotation property in V8**. It is runtime/persistence identity, not ontological vocabulary — the OWL file does not model identity bindings. Rationale: the ADR at `DG_OBSIDIAN/knowledge/decisions/DG ID cross-platform identity scheme.md`.
 
 **Normative spec:** `spec/DG-ID.md` — this database schema documents the structural shape; `DG-ID.md` is the normative contract for format, minting, rename/collision rules, the binding model, and shared-property semantics.
 
@@ -519,10 +519,10 @@ write-verb policy — before any LLM-generated Cypher reaches Neo4j
 
 ## v3→v4 Migration Notes (complete)
 
-### v3→v4 migrations (all completed in v7.0 milestone)
+### v3→v4 migrations (all completed in v8.0 milestone)
 
 **Graph schema:**
-- Added `ValidGraph` as the fourth graph layer (for DesignState, Run, IntegrationConfig, ValidationEntity)
+- Added `ValidGraph` as the fourth graph layer in the historical migration sequence (for DesignState, Run, IntegrationConfig, ValidationEntity); the current V8 schema has five layers after the later addition of `Computgraph`.
 - DesignState moved from `graph='Metagraph'` to `graph='ValidGraph'` (corrected from v3 cypher_template)
 - Added `SpecGraph` as the official graph layer for project spec storage
 

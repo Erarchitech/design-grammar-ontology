@@ -10,7 +10,7 @@
 #
 # Curated owl:disjointWith overlay (D-04, ADR-820-1).
 #
-# ontology/DesignGrammar-V7.owl (the static TBox export) stays a PRISTINE
+# ontology/DesignGrammar-V8.owl (the static TBox export) stays a PRISTINE
 # export from the ontology-authoring toolchain and carries zero disjointWith
 # axioms today. The live OntoGraph Cypher export (dg-reasoner/ontology_export.py)
 # is a flat per-project vocabulary with no subClassOf/disjointWith of its own
@@ -25,7 +25,7 @@
 # also a Window") in the `ex:` per-project domain-vocabulary namespace. It is
 # unioned with the static TBox and the live export at reasoning time only
 # (dg-reasoner/reasoning.py::_hybrid_union) -- never merged back into
-# DesignGrammar-V7.owl. It is volume-mounted read-only into the sidecar
+# DesignGrammar-V8.owl. It is volume-mounted read-only into the sidecar
 # (docker-compose.yml `./ontology:/app/ontology:ro`, Plan 821-01 D-07), so
 # curating new disjointness axioms is an edit + container restart, never an
 # image rebuild.

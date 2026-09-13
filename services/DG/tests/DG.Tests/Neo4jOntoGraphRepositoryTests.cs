@@ -24,7 +24,7 @@ public sealed class Neo4jOntoGraphRepositoryTests
     }
 
     [Fact]
-    public void ObjPropertiesQuery_ShouldUseV7Name()
+    public void ObjPropertiesQuery_ShouldUseV8Name()
     {
         var query = GetPrivateConst("ObjPropertiesQuery");
         Assert.Contains("(p:ObjProperty", query);
@@ -32,7 +32,7 @@ public sealed class Neo4jOntoGraphRepositoryTests
     }
 
     [Fact]
-    public void DataPropertiesQuery_ShouldUseV7Name()
+    public void DataPropertiesQuery_ShouldUseV8Name()
     {
         var query = GetPrivateConst("DataPropertiesQuery");
         Assert.Contains("(p:DataProperty", query);

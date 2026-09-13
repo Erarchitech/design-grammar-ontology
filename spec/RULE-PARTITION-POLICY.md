@@ -83,7 +83,7 @@ Neither of the two existing systems has a path to that data: the SWRL VALIDATOR 
 - `warning` -- a rule-mapped structural requirement that fails while the graph itself is well-formed
 - `info` -- annotation-convention normalization surfaced from the publish envelope's preserved warnings
 
-This is not a fourth reconciliation problem: the single-authoring principle extends to the third system by construction, because its subject graph is disjoint from the other two -- no rule can exist in two of the three systems simultaneously.
+This is not an additional cross-system reconciliation problem: the single-authoring principle extends to the third system by construction, because its subject graph is disjoint from the other two -- no rule can exist in two of the three systems simultaneously.
 
 The scope boundary that keeps it that way: the structure-rule vocabulary is restricted to presence, kind, type and relationship checks. A value-threshold comparison over Computgraph data is SWRL scope, not a structural check, and must never appear in a `llm/structure_rules.json` mapping entry's parameters.
 

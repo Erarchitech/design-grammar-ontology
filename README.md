@@ -6,8 +6,11 @@ The ontology, specifications and runtime services accompanying:
 > for cross-platform architectural design-intent management and data-driven design validation.
 > *Journal of Information Technology in Construction (ITcon)*. [under review]
 
-This repository is the citable deposit for that paper. It is a versioned snapshot, not the
-development tree.
+This repository is the citable GitHub deposit accompanying that paper. It is a versioned
+snapshot, not the development tree. The current publication-alignment snapshot supersedes
+**v1.1.0** and is identified by `publication-manifest.json`; its intended release version is
+**1.1.0**, while the ontology module/schema version is **V8.0**. The historical v1.1.0 tag
+is preserved unchanged.
 
 ## What is here
 
@@ -15,11 +18,11 @@ development tree.
 
 | File | Role |
 |---|---|
-| `DesignGrammar-V7.owl` | **Core module.** Vendor-neutral, declares no external imports. Table 3 of the paper is counted from this file. |
-| `catalog-v001-V7.xml` | OASIS XML catalogue mapping `owl:imports` IRIs to the physical `-V7` files, plus the external vocabulary imports. Load the standards extension with this catalogue active for HermiT reasoning. |
-| `DesignGrammar-standards-extension-V7.owl` | Alignment axioms to the W3C/OGC standards stack |
-| `DesignGrammar-BOT-extension-V7.owl` | Alignment to the Building Topology Ontology |
-| `DesignGrammar-Topologic-extension-V7.owl` | Alignment to Topologic (non-manifold spatial hierarchy) |
+| `DesignGrammar-V8.owl` | **Core module.** Vendor-neutral, declares no external imports. Table 4 of the paper is counted from this file. |
+| `catalog-v001-V8.xml` | OASIS XML catalogue mapping `owl:imports` IRIs to the physical `-V8` files, plus the external vocabulary imports. Load the standards extension with this catalogue active for HermiT reasoning. |
+| `DesignGrammar-standards-extension-V8.owl` | Alignment axioms to the W3C/OGC standards stack; includes 9 equivalent-class, 9 subclass, 4 equivalent-property and 16 subproperty assertions |
+| `DesignGrammar-BOT-extension-V8.owl` | Building-topology alignment to BOT; documents the graded-match pattern for project-generated classification terms. It is not a dedicated IFC/bSDD classification module. |
+| `DesignGrammar-Topologic-extension-V8.owl` | Alignment to the documented Topologic vocabulary (non-manifold spatial hierarchy); Topologic is not imported as a formal OWL ontology |
 | `dg-shapes.ttl` | SHACL shape set — 17 node shapes, each with a target class, a validation message and a remediation hint |
 | `dg-disjointness.ttl` | Curated `owl:disjointWith` overlay |
 
@@ -31,6 +34,7 @@ development tree.
 | `DATABASE.md` | Graph schema specification |
 | `RULE-PARTITION-POLICY.md` | Which validation system owns which rule category (SWRL vs SHACL) |
 | `DG-ID.md` | Cross-platform identity specification (§4 of the paper) |
+| `ALIGNMENT-INVENTORY.md` | Normative inventory distinguishing deposited alignment declarations from procedural/prospective IFC/bSDD mappings |
 
 ### `llm/` — rule encoding
 
@@ -50,16 +54,16 @@ Cypher migrations applied to the property-graph instance as the schema evolved.
 
 Build outputs, IDE caches and dependency trees are excluded; sources only.
 
-## Reproducing Table 3
+## Reproducing Table 4
 
-Table 3 of the paper reports the element counts of the core module. They are counted as **unique
-IRIs** declared in `ontology/DesignGrammar-V7.owl`:
+Table 4 of the paper reports the element counts of the core module. They are counted as **unique
+IRIs** declared in `ontology/DesignGrammar-V8.owl`:
 
 ```bash
 cd ontology
 for t in Class ObjectProperty DatatypeProperty; do
   printf '%-18s %s\n' "$t" \
-    "$(grep -o "<owl:$t rdf:about=\"[^\"]*\"" DesignGrammar-V7.owl \
+    "$(grep -o "<owl:$t rdf:about=\"[^\"]*\"" DesignGrammar-V8.owl \
        | sed 's/.*about="//;s/"//' | sort -u | wc -l)"
 done
 ```
@@ -69,22 +73,34 @@ done
 | Total (core module) | 62 | 43 | 68 |
 
 The per-layer figures are the same count split by namespace prefix — `&dg;` (Core + Ontograph) 18,
-`&dgm;` (Metagraph) 15, `&dgc;` (ComputGraph) 13, `&dgv;` (ValidGraph) 12, `&dgs;` (SpecGraph) 4:
+`&dgm;` (Metagraph) 15, `&dgc;` (Computgraph) 13, `&dgv;` (Validgraph) 12, `&dgs;` (SpecGraph) 4. In prose, these are styled as Ontograph, Metagraph, ComputGraph, ValidGraph and SpecGraph; the IRI local names retain the V8 casing.
 
 ```bash
-grep -o '<owl:Class rdf:about="[^"]*"' DesignGrammar-V7.owl \
+grep -o '<owl:Class rdf:about="[^"]*"' DesignGrammar-V8.owl \
   | sed 's/.*about="//;s/"//' | sort -u | sed 's/;.*/;/' | sort | uniq -c
 ```
 
-Annex C's figures come from the same files: 9 equivalent-class, 9 subclass and 16 subproperty
-axioms in the standards extension; 2 disjointness axioms in the overlay; 17 SHACL node shapes in
-the shape set.
+Annex C's figures come from the same files: 9 `owl:equivalentClass`, 9 `rdfs:subClassOf`,
+4 `owl:equivalentProperty` and 16 `rdfs:subPropertyOf` axioms in the standards extension;
+2 asserted `owl:disjointWith` triples in the overlay; and 17 SHACL node shapes in the shape set.
+The counts exclude comments, named individuals, runtime ABox data and the companion SHACL graph.
+The standards-extension counts include the four `owl:equivalentProperty` axioms; they are reported
+separately rather than folded into the `rdfs:subPropertyOf` count.
+
+## Publication manifest
+
+`publication-manifest.json` is the machine-readable contract for this snapshot. It records the
+manuscript target, release/schema versions, layer vocabulary, reproducible counts, alignment
+evidence status and the boundary between deposited artefacts and prospective IFC/bSDD exchange
+work. It deliberately does not claim an archival DOI or permanent namespace that has not been
+assigned.
 
 ## Namespace
 
-The namespace in this version is the development placeholder
-`http://example.org/design-grammar#`. It will be replaced by a resolving permanent namespace when
-the deposit is archived on acceptance.
+The namespace in this version remains the development placeholder
+`http://example.org/design-grammar#`. A resolving permanent namespace and archival DOI have not
+yet been assigned; they are future publication steps and are not claimed as completed by this
+release.
 
 ## Licence
 
@@ -100,6 +116,6 @@ Two licences, because this repository holds two kinds of work:
 See `CITATION.cff`, or:
 
 ```
-Ermolenko, E. (2026). Design Grammar ontology (Version 1.0.1) [Computer software].
+Ermolenko, E. (2026). Design Grammar ontology (Version 1.1.0) [Computer software].
 GitHub. https://github.com/Erarchitech/design-grammar-ontology
 ```

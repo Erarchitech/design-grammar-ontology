@@ -3,7 +3,7 @@
 Owns the full `POST /reason/consistency` and `POST /shacl/validate` pipeline:
 
     1. `_hybrid_union(project, session)` -- union the static
-       `DesignGrammar-V7.owl` TBox + the curated `ontology/dg-disjointness.ttl`
+       `DesignGrammar-V8.owl` TBox + the curated `ontology/dg-disjointness.ttl`
        overlay + the live project export (`ontology_export.build_graph`,
        Plan 821-02). This is the D-03 hybrid: the pipeline never reasons over
        a live-only export (the 820 false positive).
@@ -91,7 +91,7 @@ DG_REASONER_TIMEOUT_SECONDS = int(os.getenv("DG_REASONER_TIMEOUT_SECONDS", "90")
 # Static TBox (pristine export, D-04) + curated disjointness overlay. Both
 # volume-mounted read-only via ./ontology (Plan 821-01, D-07) so curating a
 # new axiom is an edit + container restart, never an image rebuild.
-DG_OWL_PATH = os.getenv("DG_OWL_PATH", "/app/ontology/DesignGrammar-V7.owl")
+DG_OWL_PATH = os.getenv("DG_OWL_PATH", "/app/ontology/DesignGrammar-V8.owl")
 DG_DISJOINTNESS_PATH = os.getenv("DG_DISJOINTNESS_PATH", "/app/ontology/dg-disjointness.ttl")
 
 # Version-controlled SHACL data-integrity shapes (D-07/D-08, Plan 823-02).

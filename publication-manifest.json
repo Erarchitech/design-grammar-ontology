@@ -1,0 +1,46 @@
+{
+  "depositVersion": "1.1.0",
+  "supersedes": "1.0.1",
+  "ontologySchemaVersion": "8.0",
+  "manuscript": "T1_ITcon_DG_Draft_R15.4",
+  "repositorySnapshot": "publication alignment snapshot",
+  "namespaceStatus": "development-placeholder",
+  "namespace": "http://example.org/design-grammar#",
+  "archivalDoiStatus": "not-assigned",
+  "layers": [
+    "Ontograph",
+    "Metagraph",
+    "ComputGraph",
+    "ValidGraph",
+    "SpecGraph"
+  ],
+  "ontologyCore": {
+    "classes": 62,
+    "objectProperties": 43,
+    "datatypeProperties": 68,
+    "countingScope": "unique declaration IRIs in ontology/DesignGrammar-V8.owl"
+  },
+  "alignmentCounts": {
+    "equivalentClass": 9,
+    "subClassOf": 9,
+    "equivalentProperty": 4,
+    "subPropertyOf": 16
+  },
+  "companionArtifacts": {
+    "shaclNodeShapes": 17,
+    "disjointWithTriples": 2
+  },
+  "alignmentEvidence": {
+    "standards": "deposited-axioms",
+    "bot": "deposited-building-topology-alignment",
+    "topologic": "deposited-local-vocabulary-documentation-alignment",
+    "ifcBsdDClassification": "procedural-or-prospective; no dedicated deposited module claimed"
+  },
+  "claimsBoundary": {
+    "swrl": "tested-subset-and-DG-validator-semantics",
+    "owlConsistency": "selected-terminological-TBox-and-overlay",
+    "shacl": "companion-structural-shapes-graph",
+    "interoperability": "IFC-referenced-semantic-alignment; full exchange interoperability remains future work",
+    "evaluation": "schema-and-demonstration-level evidence"
+  }
+}

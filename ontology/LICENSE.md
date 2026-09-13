@@ -14,7 +14,7 @@ Copyright 2026 Evgenii Ermolenko, University of Minho.
 
 ## Attribution
 
-Ermolenko, E. (2026). *Design Grammar ontology* (Version 1.0.1) [Computer software]. GitHub.
+Ermolenko, E. (2026). *Design Grammar ontology* (Version 1.1.0) [Computer software]. GitHub.
 https://github.com/Erarchitech/design-grammar-ontology
 
 The remainder of this repository — including `services/`, `llm/` and `migrations/` — is licensed

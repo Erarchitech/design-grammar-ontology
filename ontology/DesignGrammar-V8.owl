@@ -42,14 +42,14 @@
             Graph layers:
             1. Ontograph — dynamically generated domain classes and properties (not defined here)
             2. Metagraph — SWRL rule structure (Rule, Atom, Variable, Literal, Builtin)
-            3. Validgraph — validation runs, entity results, integration config
-            4. SpecGraph — project specification notes and tags
-            5. Computgraph — DCM parametric design model (Algorithm, Procedure, Pattern, Parameter, Interface)
+            3. Computgraph — DCM parametric design model (Algorithm, Procedure, Pattern, Parameter, Interface)
+            4. Validgraph — validation runs, entity results, integration config
+            5. SpecGraph — project specification notes and tags
 
-            Schema version: v7
+            Schema version: v8
         </rdfs:comment>
-        <owl:versionInfo>7.0</owl:versionInfo>
-        <rdfs:seeAlso xml:lang="en">v3.0 requirements: Variable Typing (VTYP-01..04), Composable State (CMPST-01..08), Component Contracts (CTRCT-01..09), Schema &amp; Data (SCHM-01..06), Integration (INTG-01..03). v3.1 ontology adds: ObjectInstance, GeoRef, IdRef classes; VariableKindValue, VariableScopeValue, DesignStateKindValue enum classes; full OWL characteristics on object properties; propValue on ValidationEntity (SCHM-05). v3.2 adds cross-ontology alignments to SWRL, PROV-O, SOSA, SHACL, SKOS, DCTerms, GeoSPARQL, and OWL meta-schema — see ONTOLOGY-ALIGNMENT.md for rationale. v3.3 adds explicit per-layer class hubs (LayerEntity + four layer hubs). v3.4 unifies the four-layer enum and hub structure via OWL 2 punning (dg:Ontograph / dgm:Metagraph / dgv:Validgraph / dgs:SpecGraph each serve as both a class and a NamedIndividual of dg:GraphLayer), converts dg:graph annotation values to resource references, and adds annotation enrichment for 17 external superclasses. v4.0 splits cross-vocabulary alignments into a separate facade ontology (DesignGrammar-aligned.owl) per Option B in HIERARCHY-OPTIMIZATION.md — this core file now contains only DG content with no external imports. v4.1 eliminates two degenerate enum classes (DesignStateKindValue and VariableKindValue) whose values duplicated existing class hierarchies; replaces them with owl:disjointUnionOf on DesignState and Variable; closes GraphLayer with owl:oneOf; adds VariableScope derivation axioms; and removes the now-redundant dgv:kind and dgm:variableKind ObjectProperties. v5.0 adds Computgraph layer (5th layer) for DCM parametric design model aligned with Grasshopper: Algorithm, Procedure, Pattern, Parameter, Interface, Geometry; adds RuleSet and Reasoner to Metagraph; introduces cross-layer bridge dgc:attributeOf (Atom→Parameter); splits external vocabulary extensions into per-vocabulary files (BOT, Topologic). v6.0 introduces the over-layer dg:Core band (Gero FBS Object/Function/Behavior/Structure, Geometry, Topology, DesignState{ObjState,ParamState}, unified Session); shortens the layer IRIs (meta#/valid#/comp#); renames the Knowledge layer to Spec (spec#: SpecGraph/SpecClass/SpecNote/SpecTag); relocates Reasoner to the Validgraph (= Grasshopper 'Validator' component); drops dgc:ParametricState; and adds dg:objectRef, dg:definesFunction, dgv:refersToGeometry, dgm:validates. v6.1 vendor-neutralizes the Validgraph — renames dgv:speckleProjectId→dgv:externalProjectId, scrubs Speckle/Rhino vendor references from comments and example instances so the ontology models a generic external geometry/viewer integration; external-vocabulary alignments (standards, BOT, Topologic) are retained as legitimate links. v7.0 renames V6 to match the GH_DesignGrammars.pdf component schema notation (ontology/V7-INVESTIGATION.md is the naming authority): layer-hub casing to Ontograph/Validgraph/Computgraph (Metagraph and SpecGraph unchanged); the OntoGraph reification classes are renamed to ObjProperty/DataProperty (the OWL 2 property-declaration language constructs themselves are untouched); the two design-state kinds are renamed to ObjState/ParamState, plus a new PropState (Rule+DataProperty+PropValue composition); the validation-run class is renamed to Run; the reinstatement-status enum is renamed to ReStatus(Value); the two rule-text/title properties are renamed to SWRL/RuleName, plus a new RuleDescription; new Validgraph Boolean properties SendStatus (single per Run) and ValidStatus (per-ObjState list, index-matched, overall pass derived via AND, not stored). See ontology/V6-to-V7-mapping.md for the full old->new IRI table (recovery-only guard for existing publications referencing V6 names).</rdfs:seeAlso>
+        <owl:versionInfo>8.0</owl:versionInfo>
+        <rdfs:seeAlso xml:lang="en">v3.0 requirements: Variable Typing (VTYP-01..04), Composable State (CMPST-01..08), Component Contracts (CTRCT-01..09), Schema &amp; Data (SCHM-01..06), Integration (INTG-01..03). v3.1 ontology adds: ObjectInstance, GeoRef, IdRef classes; VariableKindValue, VariableScopeValue, DesignStateKindValue enum classes; full OWL characteristics on object properties; propValue on ValidationEntity (SCHM-05). v3.2 adds cross-ontology alignments to SWRL, PROV-O, SOSA, SHACL, SKOS, DCTerms, GeoSPARQL, and OWL meta-schema — see ONTOLOGY-ALIGNMENT.md for rationale. v3.3 adds explicit per-layer class hubs (LayerEntity + four initial layer hubs). v3.4 unifies the initial layer enum and hub structure via OWL 2 punning (dg:Ontograph / dgm:Metagraph / dgv:Validgraph / dgs:SpecGraph each serve as both a class and a NamedIndividual of dg:GraphLayer), converts dg:graph annotation values to resource references, and adds annotation enrichment for 17 external superclasses. v4.0 splits cross-vocabulary alignments into a separate facade ontology (DesignGrammar-aligned.owl) per Option B in HIERARCHY-OPTIMIZATION.md — this core file now contains only DG content with no external imports. v4.1 eliminates two degenerate enum classes (DesignStateKindValue and VariableKindValue) whose values duplicated existing class hierarchies; replaces them with owl:disjointUnionOf on DesignState and Variable; closes GraphLayer with owl:oneOf; adds VariableScope derivation axioms; and removes the now-redundant dgv:kind and dgm:variableKind ObjectProperties. v5.0 adds Computgraph layer (5th layer) for DCM parametric design model aligned with Grasshopper: Algorithm, Procedure, Pattern, Parameter, Interface, Geometry; adds RuleSet and Reasoner to Metagraph; introduces cross-layer bridge dgc:attributeOf (Atom→Parameter); splits external vocabulary extensions into per-vocabulary files (BOT, Topologic). v6.0 introduces the over-layer dg:Core band (Gero FBS Object/Function/Behavior/Structure, Geometry, Topology, DesignState{ObjState,ParamState}, unified Session); shortens the layer IRIs (meta#/valid#/comp#); renames the Knowledge layer to Spec (spec#: SpecGraph/SpecClass/SpecNote/SpecTag); relocates Reasoner to the Validgraph (= Grasshopper 'Validator' component); drops dgc:ParametricState; and adds dg:objectRef, dg:definesFunction, dgv:refersToGeometry, dgm:validates. v6.1 vendor-neutralizes the Validgraph — renames dgv:speckleProjectId→dgv:externalProjectId, scrubs Speckle/Rhino vendor references from comments and example instances so the ontology models a generic external geometry/viewer integration; external-vocabulary alignments (standards, BOT, Topologic) are retained as legitimate links. v8.0 renames V6 to match the GH_DesignGrammars.pdf component schema notation (ontology/V8-INVESTIGATION.md is the naming authority): layer-hub casing to Ontograph/Validgraph/Computgraph (Metagraph and SpecGraph unchanged); the OntoGraph reification classes are renamed to ObjProperty/DataProperty (the OWL 2 property-declaration language constructs themselves are untouched); the two design-state kinds are renamed to ObjState/ParamState, plus a new PropState (Rule+DataProperty+PropValue composition); the validation-run class is renamed to Run; the reinstatement-status enum is renamed to ReStatus(Value); the two rule-text/title properties are renamed to SWRL/RuleName, plus a new RuleDescription; new Validgraph Boolean properties SendStatus (single per Run) and ValidStatus (per-ObjState list, index-matched, overall pass derived via AND, not stored). See ontology/V6-to-V8-mapping.md for the full old->new IRI table (recovery-only guard for existing publications referencing V6 names).</rdfs:seeAlso>
     </owl:Ontology>
 
     <!-- ============================================================
@@ -63,7 +63,7 @@
 
     <owl:AnnotationProperty rdf:about="&dg;graph">
         <rdfs:label xml:lang="en">graph layer</rdfs:label>
-        <rdfs:comment xml:lang="en">Logical graph partition within the single Neo4j database. Values are resource references to the four punned hub IRIs that are simultaneously classes (parents of layer-member entities) and NamedIndividuals of dg:GraphLayer: dg:Ontograph, dgm:Metagraph, dgv:Validgraph, dgs:SpecGraph. The range below documents this; OWL annotation properties do not enforce range.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Logical graph partition within the single Neo4j database. Values are resource references to the five punned hub IRIs that are simultaneously classes (parents of layer-member entities) and NamedIndividuals of dg:GraphLayer: dg:Ontograph, dgm:Metagraph, dgc:Computgraph, dgv:Validgraph, dgs:SpecGraph. The range below documents this; OWL annotation properties do not enforce range.</rdfs:comment>
         <rdfs:range rdf:resource="&dg;GraphLayer"/>
     </owl:AnnotationProperty>
 
@@ -75,8 +75,8 @@
     <!-- ============================================================
 
          GRAPH LAYERS
-         The four logical partitions of the single Neo4j database.
-         Each class in this ontology belongs to exactly one layer,
+         The five logical partitions of the single Neo4j database.
+         Each layer-member class in this ontology belongs to exactly one layer,
          identified by the dg:graph annotation. These named individuals
          make the layers explicit first-class entities.
 
@@ -84,7 +84,7 @@
 
     <owl:Class rdf:about="&dg;GraphLayer">
         <rdfs:label xml:lang="en">GraphLayer</rdfs:label>
-        <rdfs:comment xml:lang="en">A logical partition of the single Neo4j database. The Design Grammar System organizes all persisted nodes into exactly four layers (closed enumeration via owl:oneOf below, v4.1): Ontograph, Metagraph, Validgraph, SpecGraph. The four layer IRIs are punned per OWL 2 — each is both a class (parent of the layer's DG entities, under LayerEntity) and an individual (member of this GraphLayer enum). Every DG class carries a `dg:graph` annotation pointing at its layer.</rdfs:comment>
+        <rdfs:comment xml:lang="en">A logical partition of the single Neo4j database. The Design Grammar System organizes persisted nodes into exactly five layers (closed enumeration via owl:oneOf below): Ontograph, Metagraph, Computgraph, Validgraph, SpecGraph. The five layer IRIs are punned per OWL 2 — each is both a class (parent of the layer's DG entities, under LayerEntity) and an individual (member of this GraphLayer enum). Every DG class carries a `dg:graph` annotation pointing at its layer.</rdfs:comment>
         <owl:equivalentClass>
             <owl:Class>
                 <owl:oneOf rdf:parseType="Collection">
@@ -104,8 +104,8 @@
          Protégé's class hierarchy view. Without these, all DG classes
          appear in a flat list directly under owl:Thing (or under their
          external superclass when alignments are imported). These hubs
-         provide an Ontograph / Metagraph / Validgraph /
-         SpecGraph partition matching the four-layer architecture
+         provide an Ontograph / Metagraph / Computgraph / Validgraph /
+         SpecGraph partition matching the five-layer architecture
          described in the ontology overview.
          ============================================================ -->
 
@@ -219,7 +219,7 @@
 
     <owl:Class rdf:about="&dg;LayerEntity">
         <rdfs:label xml:lang="en">LayerEntity</rdfs:label>
-        <rdfs:comment xml:lang="en">Abstract root for DG entities that belong to one of the four graph layers. Direct subclasses are the four layer hubs: dg:Ontograph, dgm:Metagraph, dgv:Validgraph, dgs:SpecGraph. Each hub IRI is simultaneously a class (grouping its layer's DG entities) AND a NamedIndividual of dg:GraphLayer via OWL 2 punning (v3.4 unified structure). dg:LayerEntity itself is intentionally NOT tagged with a dg:graph annotation because it is cross-cutting — it is the parent of all four layer hubs, not a member of any single layer.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Abstract root for DG entities that belong to one of the five graph layers. Direct subclasses are the five layer hubs: dg:Ontograph, dgm:Metagraph, dgc:Computgraph, dgv:Validgraph, dgs:SpecGraph. Each hub IRI is simultaneously a class (grouping its layer's DG entities) AND a NamedIndividual of dg:GraphLayer via OWL 2 punning. dg:LayerEntity itself is intentionally NOT tagged with a dg:graph annotation because it is the parent of all five layer hubs, not a member of any single layer.</rdfs:comment>
     </owl:Class>
 
     <owl:Class rdf:about="&dg;Ontograph">
@@ -549,7 +549,7 @@
 
     <owl:DatatypeProperty rdf:about="&dgm;SWRL">
         <rdfs:label xml:lang="en">SWRL</rdfs:label>
-        <rdfs:comment xml:lang="en">The SWRL expression string for a rule (e.g. Building(?b)^hasHeightM(?b,?h)^swrlb:greaterThan(?h,75)-&gt;violatesMaxHeight(?b,true)). v7.0 rename of the V6 rule-text property to match the GH_DesignGrammars.pdf schema (DG.Layer.Metagraph.SWRL).</rdfs:comment>
+        <rdfs:comment xml:lang="en">The SWRL expression string for a rule (e.g. Building(?b)^hasHeightM(?b,?h)^swrlb:greaterThan(?h,75)-&gt;violatesMaxHeight(?b,true)). v8.0 rename of the V6 rule-text property to match the GH_DesignGrammars.pdf schema (DG.Layer.Metagraph.SWRL).</rdfs:comment>
         <rdfs:domain rdf:resource="&dgm;Rule"/>
         <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
@@ -563,14 +563,14 @@
 
     <owl:DatatypeProperty rdf:about="&dgm;RuleName">
         <rdfs:label xml:lang="en">RuleName</rdfs:label>
-        <rdfs:comment xml:lang="en">Optional human-readable title for a rule. v7.0 rename of the V6 rule-title property to match the GH_DesignGrammars.pdf schema (DG.Layer.Metagraph.RuleName).</rdfs:comment>
+        <rdfs:comment xml:lang="en">Optional human-readable title for a rule. v8.0 rename of the V6 rule-title property to match the GH_DesignGrammars.pdf schema (DG.Layer.Metagraph.RuleName).</rdfs:comment>
         <rdfs:domain rdf:resource="&dgm;Rule"/>
         <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="&dgm;RuleDescription">
         <rdfs:label xml:lang="en">RuleDescription</rdfs:label>
-        <rdfs:comment xml:lang="en">Natural-language description of a rule's intent — a longer explanation than RuleName's short title, distinct from SWRL's machine expression string. NEW in v7.0 (no V6 predecessor); matches the GH_DesignGrammars.pdf schema (DG.Layer.Metagraph.RuleDescription; Output=Rule().Description). Exposed by RULE DECONSTRUCT and VALIDATOR.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Natural-language description of a rule's intent — a longer explanation than RuleName's short title, distinct from SWRL's machine expression string. NEW in v8.0 (no V6 predecessor); matches the GH_DesignGrammars.pdf schema (DG.Layer.Metagraph.RuleDescription; Output=Rule().Description). Exposed by RULE DECONSTRUCT and VALIDATOR.</rdfs:comment>
         <rdfs:domain rdf:resource="&dgm;Rule"/>
         <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
@@ -1153,7 +1153,7 @@
 
     <owl:Class rdf:about="&dg;DesignState">
         <rdfs:label xml:lang="en">DesignState</rdfs:label>
-        <rdfs:comment xml:lang="en">A snapshot of design parameters captured from Grasshopper. Every DesignState individual is necessarily one of ParamState, ObjState, or PropState (owl:disjointUnionOf below) — mutually exclusive, never more than one. ID prefixes: DS_ (ParamState), OS_ (ObjState), PS_ (PropState). Composed by DESIGN STATE and persisted in validation runs (v7.0: CLASSIFICATOR is eliminated; VALIDATOR binds directly from the composed DesignState). STORAGE NOTE: In the Neo4j layer (SCHM-01), this discrimination is materialized as a `kind` property with values "ParamState" | "ObjState" | "PropState" on a single :DesignState node label — a runtime convenience because Cypher does not infer subclass membership. The OWL ontology does not include the kind property because rdf:type plus disjointUnionOf already discriminate (v4.1).</rdfs:comment>
+        <rdfs:comment xml:lang="en">A snapshot of design parameters captured from Grasshopper. Every DesignState individual is necessarily one of ParamState, ObjState, or PropState (owl:disjointUnionOf below) — mutually exclusive, never more than one. ID prefixes: DS_ (ParamState), OS_ (ObjState), PS_ (PropState). Composed by DESIGN STATE and persisted in validation runs (v8.0: CLASSIFICATOR is eliminated; VALIDATOR binds directly from the composed DesignState). STORAGE NOTE: In the Neo4j layer (SCHM-01), this discrimination is materialized as a `kind` property with values "ParamState" | "ObjState" | "PropState" on a single :DesignState node label — a runtime convenience because Cypher does not infer subclass membership. The OWL ontology does not include the kind property because rdf:type plus disjointUnionOf already discriminate (v4.1).</rdfs:comment>
         <owl:disjointUnionOf rdf:parseType="Collection">
             <owl:Class rdf:about="&dg;ParamState"/>
             <owl:Class rdf:about="&dg;ObjState"/>
@@ -1183,7 +1183,7 @@
 
     <owl:Class rdf:about="&dg;PropState">
         <rdfs:label xml:lang="en">PropState</rdfs:label>
-        <rdfs:comment xml:lang="en">Property state — the third DesignState kind (v7.0), composing a Rule's DataProperty result and its validated PropValue for a specific ObjectInstance. Built on the existing dgv:propValue / dgv:propValueOf datatype/object properties, which already attach per-instance validation-result values to ValidationEntity — PropState generalises that per-cell value into a first-class DesignState kind alongside ObjState and ParamState (ONTO-03, GHST-03). ID prefix: PS_.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Property state — the third DesignState kind (v8.0), composing a Rule's DataProperty result and its validated PropValue for a specific ObjectInstance. Built on the existing dgv:propValue / dgv:propValueOf datatype/object properties, which already attach per-instance validation-result values to ValidationEntity — PropState generalises that per-cell value into a first-class DesignState kind alongside ObjState and ParamState (ONTO-03, GHST-03). ID prefix: PS_.</rdfs:comment>
         <rdfs:subClassOf rdf:resource="&dg;DesignState"/>
     </owl:Class>
 
@@ -1298,14 +1298,14 @@
     <owl:DatatypeProperty rdf:about="&dgv;SendStatus">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
         <rdfs:label xml:lang="en">SendStatus</rdfs:label>
-        <rdfs:comment xml:lang="en">NEW in v7.0 (no V6 predecessor). Single Boolean per Run: whether publishing this run's results to the external geometry/viewer platform succeeded (D-08). Orthogonal to ValidStatus — set true when the publish operation completes successfully, independent of the rule pass/fail outcome. Publishing is one operation per run, so SendStatus is not per-object. Characteristics: Functional. Matches the GH_DesignGrammars.pdf schema (DG.Layer.Validgraph.SendStatus; Output=Run().SendStatus Datatype: Boolean).</rdfs:comment>
+        <rdfs:comment xml:lang="en">NEW in v8.0 (no V6 predecessor). Single Boolean per Run: whether publishing this run's results to the external geometry/viewer platform succeeded (D-08). Orthogonal to ValidStatus — set true when the publish operation completes successfully, independent of the rule pass/fail outcome. Publishing is one operation per run, so SendStatus is not per-object. Characteristics: Functional. Matches the GH_DesignGrammars.pdf schema (DG.Layer.Validgraph.SendStatus; Output=Run().SendStatus Datatype: Boolean).</rdfs:comment>
         <rdfs:domain rdf:resource="&dgv;Run"/>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="&dgv;ValidStatus">
         <rdfs:label xml:lang="en">ValidStatus</rdfs:label>
-        <rdfs:comment xml:lang="en">NEW in v7.0 (no V6 predecessor). Boolean LIST per Run, one element per ObjState in the validated DesignState, index-matched to the DesignState's ObjState order (D-06). Each element is that object's pass/fail against the rule. Overall pass = AND(ValidStatus), derived at read time, never stored as a separate field (D-07) — unifies the PDF's VALIDATOR-port ValidStatus(Boolean) and VALIDATION GRAPH-port Status(text) naming split into this one field. Not declared FunctionalProperty (multiple values per Run form the list). Population semantics (which ObjStates the list covers) are Phase 18 scope (VALIDATOR variable binding), not locked here. Matches the GH_DesignGrammars.pdf schema (DG.Layer.Validgraph.ValidStatus).</rdfs:comment>
+        <rdfs:comment xml:lang="en">NEW in v8.0 (no V6 predecessor). Boolean LIST per Run, one element per ObjState in the validated DesignState, index-matched to the DesignState's ObjState order (D-06). Each element is that object's pass/fail against the rule. Overall pass = AND(ValidStatus), derived at read time, never stored as a separate field (D-07) — unifies the PDF's VALIDATOR-port ValidStatus(Boolean) and VALIDATION GRAPH-port Status(text) naming split into this one field. Not declared FunctionalProperty (multiple values per Run form the list). Population semantics (which ObjStates the list covers) are Phase 18 scope (VALIDATOR variable binding), not locked here. Matches the GH_DesignGrammars.pdf schema (DG.Layer.Validgraph.ValidStatus).</rdfs:comment>
         <rdfs:domain rdf:resource="&dgv;Run"/>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
@@ -1380,7 +1380,7 @@
 
     <owl:DatatypeProperty rdf:about="&dgv;designStateLabel">
         <rdfs:label xml:lang="en">designStateLabel</rdfs:label>
-        <rdfs:comment xml:lang="en">Human-readable label assigned by the user in DESIGN STATE component. Surfaces as a tile header in the Model Viewer and as an output of DESIGN STATE DECONSTRUCT. NEW in v7.0 post-release (2026-07-08).</rdfs:comment>
+        <rdfs:comment xml:lang="en">Human-readable label assigned by the user in DESIGN STATE component. Surfaces as a tile header in the Model Viewer and as an output of DESIGN STATE DECONSTRUCT. NEW in v8.0 post-release (2026-07-08).</rdfs:comment>
         <rdfs:domain rdf:resource="&dg;DesignState"/>
         <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>

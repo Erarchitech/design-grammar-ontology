@@ -22,7 +22,7 @@ repo-root venv), the same env var is unset and the path falls back to
 `<repo-root>/llm/cypher_catalog.json`, computed relative to this file.
 
 `assemble_context()` (added Plan 29-03) is the CTXA-01 core: it unions the
-static per-layer V7 concept subset (Ontograph/Metagraph/Validgraph, plus the
+static per-layer V8 concept subset (Ontograph/Metagraph/Validgraph, plus the
 forward-prep-only Computgraph block from `dg_knowledge.load_computgraph_catalog()`),
 the SWRL conventions (`dg_knowledge.swrl_conventions()`), a deterministic
 keyword-matched subset of this module's own Cypher catalog, and a LIVE
@@ -130,7 +130,7 @@ class ContextAssembleRequest(BaseModel):
     question: str | None = None
 
 
-# ── Static per-layer V7 concept subset (Phase 29-03: CTXA-01) ──
+# ── Static per-layer V8 concept subset (Phase 29-03: CTXA-01) ──
 #
 # Schema-level facts (allowed labels/relationships/key properties/graph
 # values) straight from cypher_template.txt's GRAPH SCHEMA section --
@@ -455,7 +455,7 @@ def fetch_existing_design_states(project: str, session: Any = None) -> list[dict
 
 
 def assemble_context(req: ContextAssembleRequest, session: Any = None) -> dict[str, Any]:
-    """Deterministically assemble the per-layer V7 concept subset + SWRL
+    """Deterministically assemble the per-layer V8 concept subset + SWRL
     conventions + selected Cypher catalog shapes + live existing entities for
     one of the three request types (rule_ingest, rule_edit, graph_query).
 
@@ -561,7 +561,7 @@ ALLOWED_PROPERTIES: set[str] = {
 }
 
 
-# DesignState.kind enum (v4/v7 schema) -- same three values already exposed
+# DesignState.kind enum (v4/v8 schema) -- same three values already exposed
 # via VALIDGRAPH_CONCEPTS["design_state_kinds"] above; kept as its own
 # module-level constant here so the validator's bad_kind_enum check doesn't
 # need to reach back into the assembler's concept dict. Note (29-06): these

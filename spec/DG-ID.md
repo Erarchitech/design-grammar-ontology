@@ -23,7 +23,7 @@ This document is the normative contract. The implementation plans (`DG.Core.Mode
 - `dgId` is the durable identity spine. It survives platform boundaries by design; no native id does.
 - **Normative same-dgId contract (LOCKED):** counterpart objects across platforms share ONE `dgId` *within one Design State*. A Grasshopper parametric wall and the Revit BIM wall generated from it MUST resolve to the same `dgId` when observed through the DesignState that captured both representations.
 - **In scope (32.1):** the identity format, deterministic minting, rename/stability rules, cross-project collision policy, the binding model (`Representation` nodes), shared-property semantics with conflict direction, and the graph-partition placement.
-- **Out of scope (deferred):** the real Revit connector (proven here against a simulated consumer), bidirectional per-platform conflict resolution, IFC export carrying `dgId`, and the member-GUID rename escape hatch (see [Rename & Stability](#rename--stability-rules) and the ADR).
+- **Out of scope (deferred):** the real Revit connector (proven here against a simulated consumer), bidirectional per-platform conflict resolution, IFC export carrying `dgId`, and the member-GUID rename escape hatch (see [Rename & Stability](#rename--stability-rules) and the ADR). A class-level IFC/bSDD reference does not by itself establish complete IFC exchange interoperability.
 
 ---
 

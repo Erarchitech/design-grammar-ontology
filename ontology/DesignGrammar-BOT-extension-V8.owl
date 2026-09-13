@@ -24,7 +24,7 @@
     xml:base="http://example.org/design-grammar/bot-extension">
 
     <!-- ============================================================
-         DESIGN GRAMMAR — BOT (Building Topology Ontology) EXTENSION (v7.0)
+         DESIGN GRAMMAR — BOT (Building Topology Ontology) EXTENSION (v8.0)
 
          This extension ontology imports the DG core ontology and the
          W3C-LBD Building Topology Ontology (BOT), then declares
@@ -39,15 +39,17 @@
          be interpreted in standard architectural terms (CellComplex →
          bot:Building, Cell → bot:Space, Shell → bot:Facade/Element).
 
-         Pattern: Per-vocabulary extension file (replaces monolithic
-         DesignGrammar-aligned.owl for new vocabulary bindings).
+         Pattern: Per-vocabulary alignment file (replaces the former
+         monolithic DesignGrammar-aligned.owl for new vocabulary
+         bindings). This file is not a dedicated IFC/bSDD
+         classification module.
          ============================================================ -->
 
     <owl:Ontology rdf:about="http://example.org/design-grammar/bot-extension">
         <cc:license rdf:resource="https://creativecommons.org/licenses/by/4.0/"/>
         <rdfs:label xml:lang="en">Design Grammar — BOT Extension</rdfs:label>
         <rdfs:comment xml:lang="en">Building Topology Ontology (W3C-LBD) alignment extension for the Design Grammar System. Bridges DG Core topology concept (dg:Topology) to BOT's standard building spatial decomposition vocabulary. Enables interpretation of Topologic analysis results in architectural terms.</rdfs:comment>
-        <owl:versionInfo>7.0</owl:versionInfo>
+        <owl:versionInfo>8.0</owl:versionInfo>
         <owl:imports rdf:resource="http://example.org/design-grammar"/>
         <owl:imports rdf:resource="https://w3id.org/bot#"/>
     </owl:Ontology>
@@ -134,7 +136,7 @@
 
 
     <!-- ============================================================
-         GENERATED-CLASS MATCH VOCABULARY  (v7.0, additive)
+         GENERATED-CLASS MATCH VOCABULARY  (v8.0, additive)
 
          Ontograph domain classes are minted per project, at ingest, in
          the project namespace, from the vocabulary a rule author uses.

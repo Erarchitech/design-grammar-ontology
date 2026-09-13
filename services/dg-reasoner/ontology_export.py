@@ -29,7 +29,7 @@ from rdflib import BNode, Graph, Literal as RDFLiteral, Namespace, URIRef
 from rdflib.namespace import OWL, RDF, RDFS, XSD
 
 # --- namespaces (spec/LPG-OWL-MAPPING.md #Namespaces & Terminology) ---
-BASE = "http://example.org/design-grammar"  # matches DesignGrammar-V7.owl xml:base
+BASE = "http://example.org/design-grammar"  # matches DesignGrammar-V8.owl xml:base
 DG = Namespace(f"{BASE}#")  # dg: meta-schema (graph-layer + rule annotation properties)
 DGM = Namespace(f"{BASE}/meta#")  # dgm: Metagraph-layer entity definitions (SkippedRule/SkippedAtom)
 EX = Namespace(f"{BASE}/ex#")  # ex: per-project domain vocabulary (NOT the static TBox)

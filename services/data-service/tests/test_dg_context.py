@@ -184,8 +184,8 @@ class TestContextAssemble:
         assert context["existing_entities"] == fixture_rows
         assert session.last_project == "fixture-proj"
 
-    def test_all_four_layers_and_swrl_conventions_present(self):
-        """assemble_context() returns a dict with all four per-layer keys + SWRL + selected shapes."""
+    def test_layer_context_and_swrl_conventions_present(self):
+        """assemble_context() returns the layer context keys + SWRL + selected shapes."""
         req = self._req(type="rule_ingest", rules_text="Maximum height 75")
         context = dg_context.assemble_context(req, session=FixtureSession())
 

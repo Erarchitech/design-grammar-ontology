@@ -22,12 +22,13 @@
     xml:base="http://example.org/design-grammar/topologic-extension">
 
     <!-- ============================================================
-         DESIGN GRAMMAR — TOPOLOGIC EXTENSION (v7.0)
+         DESIGN GRAMMAR — TOPOLOGIC EXTENSION (v8.0)
 
          This extension ontology imports the DG core ontology and
-         declares alignment axioms bridging DG Computgraph topology
-         concepts to the Topologic library's spatial decomposition
-         hierarchy.
+         declares a local OWL representation of documented Topologic
+         concepts, together with alignment relations bridging DG
+         Computgraph topology concepts to Topologic's spatial
+         decomposition hierarchy.
 
          Topologic (https://topologic.app) is a spatial analysis library
          used in Grasshopper for decomposing BRep geometry into
@@ -46,7 +47,7 @@
         <cc:license rdf:resource="https://creativecommons.org/licenses/by/4.0/"/>
         <rdfs:label xml:lang="en">Design Grammar — Topologic Extension</rdfs:label>
         <rdfs:comment xml:lang="en">Topologic spatial analysis library alignment extension for the Design Grammar System. Bridges DG Computgraph topology concepts to Topologic's hierarchical spatial decomposition (Cluster → CellComplex → Cell → Shell → Face → Wire → Edge → Vertex). Enables spatial analysis of parametric design output in Grasshopper.</rdfs:comment>
-        <owl:versionInfo>7.0</owl:versionInfo>
+        <owl:versionInfo>8.0</owl:versionInfo>
         <owl:imports rdf:resource="http://example.org/design-grammar"/>
     </owl:Ontology>
 
@@ -57,9 +58,12 @@
          elements. These are declared here as subclasses of dgc:Topology
          with the proper inter-class relationships.
 
-         Note: Topologic does not publish a formal OWL ontology, so
-         these classes are declared in the DG namespace with seeAlso
-         references to the Topologic documentation.
+         Evidence boundary: Topologic does not publish a formal,
+         versioned OWL ontology. These classes and properties are
+         therefore local representations in the Topologic namespace,
+         with seeAlso references to the Topologic documentation; this
+         file does not claim that the external library supplies an OWL
+         TBox equivalent to these declarations.
          ============================================================ -->
 
     <owl:Class rdf:about="&topo;Cluster">

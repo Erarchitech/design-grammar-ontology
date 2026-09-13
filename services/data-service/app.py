@@ -279,7 +279,7 @@ class ValidationPublishRequest(BaseModel):
     # onward (see CLAUDE.md Graph Schema v4 / DesignState kind vocabulary).
     statePayloadJson: str | None = None
     # validStatus carries per-ObjState Boolean list from Phase 18 GHVL-05.
-    # Index-matched to DesignState.ObjStates order. None for pre-v7.0 clients.
+    # Index-matched to DesignState.ObjStates order. None for pre-v8.0 clients.
     validStatus: list[bool] | None = None
     rules: list[ValidationPublishRulePayload] = Field(default_factory=list)
     ruleResults: list[ValidationPublishRuleResultPayload] = Field(default_factory=list)
@@ -545,7 +545,7 @@ def store_validation_run(
     created_at = datetime.now(timezone.utc).isoformat()
 
     # Use passed ValidStatus from the request if present (Phase 18 GHVL-05),
-    # otherwise fall back to entity-based computation (backward compat for pre-v7.0 clients)
+    # otherwise fall back to entity-based computation (backward compat for pre-v8.0 clients)
     if valid_status_param is not None:
         valid_status = valid_status_param
     else:
@@ -1818,7 +1818,7 @@ def _context_type_invalid_error(exc: ValueError) -> HTTPException:
 
 @app.post("/context/assemble")
 def post_context_assemble(payload: dg_context.ContextAssembleRequest):
-    """Assemble the per-layer V7 concept subset + SWRL conventions + selected
+    """Assemble the per-layer V8 concept subset + SWRL conventions + selected
     Cypher catalog shapes + live existing entities for one request (D-01).
     Thin route -- all logic delegates to dg_context.assemble_context()."""
     try:
